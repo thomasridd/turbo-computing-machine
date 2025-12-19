@@ -23,6 +23,7 @@
     "tesseract.js": "^5.1.1"
   },
   "devDependencies": {
+    "@netlify/functions": "^2.8.2",
     "@netlify/plugin-nextjs": "^5.9.2",
     "@types/node": "^20",
     "@types/react": "^18",
