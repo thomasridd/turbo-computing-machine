@@ -9,7 +9,7 @@ A Next.js web application for splitting restaurant bills from receipt photos usi
 ## Features
 
 - **📸 Receipt Upload** - Upload and preview receipt photos with rotation controls
-- **🔍 OCR Processing** - Automatic text extraction using Tesseract.js
+- **🔍 Advanced OCR** - Multiple OCR providers with automatic fallback (Google Cloud Vision, OCR.space, or Tesseract.js)
 - **✏️ Item Editing** - Review, edit, or manually enter line items
 - **👥 People Management** - Add multiple people to split the bill
 - **🎯 Smart Assignment** - Assign items to people with sharing support
@@ -21,7 +21,8 @@ A Next.js web application for splitting restaurant bills from receipt photos usi
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui (Radix UI)
-- **OCR Engine**: Tesseract.js
+- **OCR Engine**: Google Cloud Vision / OCR.space / Tesseract.js (with automatic fallback)
+- **Serverless Functions**: Netlify Functions
 - **State Management**: React Context
 
 ## Getting Started
@@ -50,6 +51,15 @@ npm run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Optional: Configure OCR API (for better accuracy)
+
+For improved OCR accuracy, set up a cloud OCR service. See [OCR_SETUP.md](./OCR_SETUP.md) for detailed instructions.
+
+**Quick setup:**
+- **Google Cloud Vision** (best accuracy): Add `GOOGLE_CLOUD_VISION_API_KEY` environment variable
+- **OCR.space** (free tier): Add `OCR_SPACE_API_KEY` environment variable
+- **No setup needed**: App works with Tesseract.js by default
 
 ### Build for Production
 
@@ -167,10 +177,14 @@ The app includes `netlify.toml` for automatic configuration.
 
 ### OCR Processing
 
-- Uses Tesseract.js for client-side OCR
-- No server/API required
+- **Multi-provider support**:
+  - Google Cloud Vision API (95-99% accuracy) - optional
+  - OCR.space API (85-95% accuracy) - optional
+  - Tesseract.js (70-85% accuracy) - built-in fallback
+- Automatic fallback if cloud APIs fail or are not configured
 - Progress tracking during processing
-- Fallback to manual entry if OCR fails
+- Manual entry option if OCR fails
+- See [OCR_SETUP.md](./OCR_SETUP.md) for setup guide
 
 ### Bill Calculation
 

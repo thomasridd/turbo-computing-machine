@@ -46,13 +46,27 @@ If you need to override the automatic settings:
    - Publish directory: `.next`
    - Node version: 20
 
-### Environment Variables
+### Environment Variables (Optional)
 
-This app runs entirely client-side and doesn't require any environment variables. However, if you add backend features later:
+For better OCR accuracy, configure a cloud OCR API. See [OCR_SETUP.md](./OCR_SETUP.md) for detailed instructions.
 
+**Option 1: Google Cloud Vision API (Recommended)**
 1. Go to Site settings > Environment variables
-2. Add your variables
+2. Add variable:
+   - Key: `GOOGLE_CLOUD_VISION_API_KEY`
+   - Value: Your Google Cloud Vision API key
 3. Redeploy the site
+
+**Option 2: OCR.space API (Free Alternative)**
+1. Go to Site settings > Environment variables
+2. Add variable:
+   - Key: `OCR_SPACE_API_KEY`
+   - Value: Your OCR.space API key
+3. Redeploy the site
+
+**No API Key?**
+- The app works without API keys by using Tesseract.js (lower accuracy)
+- See [OCR_SETUP.md](./OCR_SETUP.md) for comparison and setup instructions
 
 ### Custom Domain
 
