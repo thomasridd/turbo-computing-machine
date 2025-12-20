@@ -117,21 +117,19 @@ export default function ReceiptUpload() {
                 <div className="flex justify-center gap-2">
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                     onClick={rotateLeft}
                     type="button"
                   >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    Rotate Left
+                    <RotateCcw className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                     onClick={rotateRight}
                     type="button"
                   >
-                    <RotateCw className="w-4 h-4 mr-2" />
-                    Rotate Right
+                    <RotateCw className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
