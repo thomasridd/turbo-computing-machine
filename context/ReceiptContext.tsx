@@ -7,6 +7,7 @@ interface ReceiptContextType extends ReceiptState {
   setImage: (file: File | null) => void;
   setImageUrl: (url: string | null) => void;
   setOcrText: (text: string | null) => void;
+  setOcrMethod: (method: string | null) => void;
   setItems: (items: LineItem[]) => void;
   setSubtotal: (subtotal: number) => void;
   setTipPercentage: (percentage: number) => void;
@@ -29,6 +30,7 @@ const initialState: ReceiptState = {
   image: null,
   imageUrl: null,
   ocrText: null,
+  ocrMethod: null,
   items: [],
   subtotal: 0,
   tipPercentage: 10,
@@ -52,6 +54,10 @@ export function ReceiptProvider({ children }: { children: ReactNode }) {
 
   const setOcrText = (text: string | null) => {
     setState((prev) => ({ ...prev, ocrText: text }));
+  };
+
+  const setOcrMethod = (method: string | null) => {
+    setState((prev) => ({ ...prev, ocrMethod: method }));
   };
 
   const setItems = (items: LineItem[]) => {
@@ -131,6 +137,7 @@ export function ReceiptProvider({ children }: { children: ReactNode }) {
         setImage,
         setImageUrl,
         setOcrText,
+        setOcrMethod,
         setItems,
         setSubtotal,
         setTipPercentage,

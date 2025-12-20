@@ -13,7 +13,9 @@ export default function OCRProcessor() {
   const {
     image,
     ocrText,
+    ocrMethod,
     setOcrText,
+    setOcrMethod,
     setItems,
     setSubtotal,
     setTipAmount,
@@ -44,14 +46,15 @@ export default function OCRProcessor() {
     setProgress(0);
 
     try {
-      const text = await processImage(image, (p) => {
+      const result = await processImage(image, (p) => {
         setProgress(Math.round(p * 100));
       });
 
-      setOcrText(text);
+      setOcrText(result.text);
+      setOcrMethod(result.method);
 
       // Parse the receipt
-      const parsed = parseReceipt(text);
+      const parsed = parseReceipt(result.text);
       setItems(parsed.items);
       setSubtotal(parsed.subtotal);
 
@@ -130,7 +133,12 @@ export default function OCRProcessor() {
                   )}
                 </Button>
                 {showRawText && (
-                  <div className="p-4 border-t">
+                  <div className="p-4 border-t space-y-2">
+                    {ocrMethod && (
+                      <div className="text-xs text-muted-foreground mb-2">
+                        <strong>OCR Method:</strong> {ocrMethod}
+                      </div>
+                    )}
                     <pre className="text-xs whitespace-pre-wrap bg-muted p-4 rounded overflow-x-auto">
                       {ocrText}
                     </pre>
