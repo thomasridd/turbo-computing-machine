@@ -1,7 +1,7 @@
 import { LineItem, ParsedReceipt } from './types';
 
-const ITEM_REGEX = /^(\d+)\s+(.+?)\s+£([\d.]+)$/gm;
-const ITEM_WITHOUT_QUANTITY_REGEX = /^(?!\d+\s)(.+?)\s+£([\d.]+)$/gm;
+const ITEM_REGEX = /^(\d+)\s+(.+)\s+£([\d.]+)$/gm;
+const ITEM_WITHOUT_QUANTITY_REGEX = /^(?!\d+\s)(.+)\s+£([\d.]+)$/gm;
 const SUBTOTAL_REGEX = /(?:sub\s*total|subtotal)[:\s]*£?([\d.]+)/i;
 const SERVICE_REGEX = /(?:service|tip|gratuity).*?[:\s]*£?([\d.]+)/i;
 const TOTAL_REGEX = /(?:^|\n)total[:\s]*£?([\d.]+)/i;
