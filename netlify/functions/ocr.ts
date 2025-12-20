@@ -74,6 +74,7 @@ const handler: Handler = async (event: HandlerEvent) => {
       formData.append('isOverlayRequired', 'false');
       formData.append('detectOrientation', 'true');
       formData.append('scale', 'true');
+      formData.append('isTable', 'false'); // Disable table detection to avoid column splitting
       formData.append('OCREngine', '2'); // Use OCR Engine 2 for better accuracy
 
       const response = await fetch('https://api.ocr.space/parse/image', {
