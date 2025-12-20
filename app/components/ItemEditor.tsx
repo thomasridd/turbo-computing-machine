@@ -141,15 +141,16 @@ export default function ItemEditor() {
                       onChange={(e) =>
                         handleUpdateItem(item.id, "quantity", parseInt(e.target.value))
                       }
-                      className="w-20"
+                      className="w-14 flex-shrink-0"
                     />
                     <Input
                       type="text"
                       value={item.name}
                       onChange={(e) => handleUpdateItem(item.id, "name", e.target.value)}
-                      className="flex-1"
+                      className="flex-1 min-w-0"
+                      placeholder="Item name"
                     />
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       <span className="text-sm">£</span>
                       <Input
                         type="number"
@@ -157,14 +158,14 @@ export default function ItemEditor() {
                         min="0"
                         value={item.price.toFixed(2)}
                         onChange={(e) => handleUpdateItem(item.id, "price", e.target.value)}
-                        className="w-24"
+                        className="w-20"
                       />
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDeleteItem(item.id)}
-                      className="text-destructive"
+                      className="text-destructive flex-shrink-0"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -178,7 +179,7 @@ export default function ItemEditor() {
           <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
             <h3 className="text-sm font-medium">Add New Item</h3>
             <div className="flex items-end gap-2">
-              <div className="space-y-2">
+              <div className="space-y-2 flex-shrink-0">
                 <Label htmlFor="quantity">Qty</Label>
                 <Input
                   id="quantity"
@@ -188,10 +189,10 @@ export default function ItemEditor() {
                   onChange={(e) =>
                     setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 1 })
                   }
-                  className="w-20"
+                  className="w-14"
                 />
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 space-y-2 min-w-0">
                 <Label htmlFor="name">Item Name</Label>
                 <Input
                   id="name"
@@ -201,7 +202,7 @@ export default function ItemEditor() {
                   placeholder="e.g., Fish & Chips"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 flex-shrink-0">
                 <Label htmlFor="price">Price (£)</Label>
                 <Input
                   id="price"
@@ -211,10 +212,10 @@ export default function ItemEditor() {
                   value={newItem.price}
                   onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
                   placeholder="0.00"
-                  className="w-28"
+                  className="w-20"
                 />
               </div>
-              <Button onClick={handleAddItem}>
+              <Button onClick={handleAddItem} className="flex-shrink-0">
                 <Plus className="h-4 w-4 mr-2" />
                 Add
               </Button>

@@ -55,6 +55,30 @@ const handler: Handler = async (event: HandlerEvent) => {
 
       const data = await response.json();
 
+      // Check for errors from Google API
+      if (!response.ok) {
+        console.error('Google Vision API error:', data);
+        return {
+          statusCode: response.status,
+          body: JSON.stringify({
+            error: 'Google Cloud Vision API failed',
+            details: data.error?.message || 'Unknown error',
+          }),
+        };
+      }
+
+      // Check if response contains errors
+      if (data.responses && data.responses[0].error) {
+        console.error('Google Vision API error:', data.responses[0].error);
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            error: 'Google Cloud Vision API failed',
+            details: data.responses[0].error.message || 'Unknown error',
+          }),
+        };
+      }
+
       if (data.responses && data.responses[0].fullTextAnnotation) {
         const text = data.responses[0].fullTextAnnotation.text;
         return {
@@ -66,6 +90,15 @@ const handler: Handler = async (event: HandlerEvent) => {
           }),
         };
       }
+
+      // If no text was detected
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'No text detected in image',
+          details: 'Google Cloud Vision did not find any text in the image',
+        }),
+      };
     } else if (ocrSpaceApiKey) {
       // Use OCR.space API
       const formData = new FormData();
@@ -74,7 +107,8 @@ const handler: Handler = async (event: HandlerEvent) => {
       formData.append('isOverlayRequired', 'false');
       formData.append('detectOrientation', 'true');
       formData.append('scale', 'true');
-      formData.append('OCREngine', '2'); // Use OCR Engine 2 for better accuracy
+      formData.append('isTable', 'false'); // Disable table detection to avoid column splitting
+      formData.append('OCREngine', '1'); // Use OCR Engine 1 (legacy) for simpler text extraction
 
       const response = await fetch('https://api.ocr.space/parse/image', {
         method: 'POST',
