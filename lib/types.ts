@@ -15,6 +15,7 @@ export interface ReceiptState {
   image: File | null;
   imageUrl: string | null;
   ocrText: string | null;
+  ocrMethod: string | null;
 
   // Step 3
   items: LineItem[];

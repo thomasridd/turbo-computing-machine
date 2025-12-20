@@ -6,6 +6,11 @@ interface OCRResult {
   provider?: string;
 }
 
+export interface ProcessImageResult {
+  text: string;
+  method: string;
+}
+
 /**
  * Process image using cloud OCR API (Google Cloud Vision or OCR.space)
  * Falls back to Tesseract.js if API is not available or fails
@@ -13,12 +18,12 @@ interface OCRResult {
 export async function processImage(
   imageFile: File,
   onProgress?: (progress: number) => void
-): Promise<string> {
+): Promise<ProcessImageResult> {
   try {
     // Try cloud OCR first (via Netlify Function)
-    const text = await processWithCloudOCR(imageFile, onProgress);
-    if (text) {
-      return text;
+    const result = await processWithCloudOCR(imageFile, onProgress);
+    if (result) {
+      return result;
     }
   } catch (error) {
     console.warn('Cloud OCR failed, falling back to Tesseract.js:', error);
@@ -34,7 +39,7 @@ export async function processImage(
 async function processWithCloudOCR(
   imageFile: File,
   onProgress?: (progress: number) => void
-): Promise<string | null> {
+): Promise<ProcessImageResult | null> {
   onProgress?.(0.1);
 
   // Convert file to base64
@@ -65,8 +70,9 @@ async function processWithCloudOCR(
   const result: OCRResult = await response.json();
   onProgress?.(1.0);
 
-  console.info(`OCR completed using ${result.provider || 'cloud service'}`);
-  return result.text;
+  const method = result.provider || 'cloud service';
+  console.info(`OCR completed using ${method}`);
+  return { text: result.text, method };
 }
 
 /**
@@ -75,7 +81,7 @@ async function processWithCloudOCR(
 async function processWithTesseract(
   imageFile: File,
   onProgress?: (progress: number) => void
-): Promise<string> {
+): Promise<ProcessImageResult> {
   console.info('Using Tesseract.js for OCR');
 
   const worker = await Tesseract.createWorker('eng', 1, {
@@ -89,7 +95,7 @@ async function processWithTesseract(
   const { data: { text } } = await worker.recognize(imageFile);
   await worker.terminate();
 
-  return text;
+  return { text, method: 'tesseract' };
 }
 
 /**
