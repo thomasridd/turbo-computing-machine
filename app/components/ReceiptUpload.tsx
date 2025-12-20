@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useReceipt } from "@/context/ReceiptContext";
-import { Upload, RotateCcw, RotateCw } from "lucide-react";
+import { Upload, RotateCcw, RotateCw, X } from "lucide-react";
 
 export default function ReceiptUpload() {
   const { image, imageUrl, setImage, setImageUrl, nextStep } = useReceipt();
@@ -45,6 +45,16 @@ export default function ReceiptUpload() {
     setRotation((prev) => (prev + 90) % 360);
   };
 
+  const clearImage = () => {
+    setImage(null);
+    setImageUrl(null);
+    setRotation(0);
+    setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleNext = () => {
     if (image) {
       nextStep();
@@ -76,19 +86,20 @@ export default function ReceiptUpload() {
               className="hidden"
               id="receipt-upload"
             />
-            <label htmlFor="receipt-upload" className="cursor-pointer">
-              <div className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg hover:border-primary transition-colors">
-                <Upload className="w-12 h-12 text-muted-foreground mb-4" />
-                <p className="text-sm text-muted-foreground">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  JPG, PNG (max 10MB)
-                </p>
-              </div>
-            </label>
 
-            {imageUrl && (
+            {!imageUrl ? (
+              <label htmlFor="receipt-upload" className="cursor-pointer w-full">
+                <div className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg hover:border-primary transition-colors">
+                  <Upload className="w-12 h-12 text-muted-foreground mb-4" />
+                  <p className="text-sm text-muted-foreground">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    JPG, PNG (max 10MB)
+                  </p>
+                </div>
+              </label>
+            ) : (
               <div className="w-full space-y-4">
                 <div className="relative w-full max-h-96 overflow-hidden rounded-lg border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -121,6 +132,15 @@ export default function ReceiptUpload() {
                   >
                     <RotateCw className="w-4 h-4 mr-2" />
                     Rotate Right
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearImage}
+                    type="button"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Clear Image
                   </Button>
                 </div>
               </div>
