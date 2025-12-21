@@ -58,11 +58,21 @@ const handler: Handler = async (event: HandlerEvent) => {
       // Check for errors from Google API
       if (!response.ok) {
         console.error('Google Vision API error:', data);
+
+        // Provide helpful error messages for common issues
+        let errorMessage = 'Google Cloud Vision API failed';
+        let errorDetails = data.error?.message || 'Unknown error';
+
+        if (data.error?.code === 403 && data.error?.message?.includes('referer')) {
+          errorMessage = 'Google API Key Configuration Error';
+          errorDetails = 'Your API key has HTTP referrer restrictions. For Netlify Functions, you need to either: (1) Remove HTTP referrer restrictions from your API key in Google Cloud Console, or (2) Use a Service Account instead of an API key.';
+        }
+
         return {
           statusCode: response.status,
           body: JSON.stringify({
-            error: 'Google Cloud Vision API failed',
-            details: data.error?.message || 'Unknown error',
+            error: errorMessage,
+            details: errorDetails,
           }),
         };
       }

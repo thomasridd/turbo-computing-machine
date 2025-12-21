@@ -6,7 +6,29 @@ const SUBTOTAL_REGEX = /(?:sub\s*total|subtotal)[:\s]*£?([\d.]+)/i;
 const SERVICE_REGEX = /(?:service|tip|gratuity).*?[:\s]*£?([\d.]+)/i;
 const TOTAL_REGEX = /(?:^|\n)total[:\s]*£?([\d.]+)/i;
 
+/**
+ * Normalize multi-line items to single lines
+ * Handles cases where OCR splits items across 2-3 lines:
+ * - "1 Item Name\n£12.50" -> "1 Item Name £12.50"
+ * - "1\nItem Name\n£12.50" -> "1 Item Name £12.50"
+ */
+function normalizeMultiLineItems(text: string): string {
+  // Pattern 1: "quantity\nname\n£price" -> "quantity name £price"
+  text = text.replace(/^(\d+)\s*\n([^\n£\d]+?)\s*\n(£[\d.]+)/gm, '$1 $2 $3');
+
+  // Pattern 2: "quantity name\n£price" -> "quantity name £price"
+  text = text.replace(/^(\d+)\s+([^\n£]+?)\s*\n(£[\d.]+)/gm, '$1 $2 $3');
+
+  // Pattern 3: "name\n£price" (no quantity) -> "name £price"
+  text = text.replace(/^([^\n\d£][^\n£]+?)\s*\n(£[\d.]+)/gm, '$1 $2');
+
+  return text;
+}
+
 export function parseReceipt(text: string): ParsedReceipt {
+  // Normalize multi-line items first
+  text = normalizeMultiLineItems(text);
+
   const items: LineItem[] = [];
   let match;
   const processedLines = new Set<string>();
