@@ -11,16 +11,17 @@ const TOTAL_REGEX = /(?:^|\n)total[:\s]*£?([\d.]+)/i;
  * Handles cases where OCR splits items across 2-3 lines:
  * - "1 Item Name\n£12.50" -> "1 Item Name £12.50"
  * - "1\nItem Name\n£12.50" -> "1 Item Name £12.50"
+ * - "1\nItem Name\n12.50" -> "1 Item Name £12.50"
  */
 function normalizeMultiLineItems(text: string): string {
-  // Pattern 1: "quantity\nname\n£price" -> "quantity name £price"
-  text = text.replace(/^(\d+)\s*\n([^\n£\d]+?)\s*\n(£[\d.]+)/gm, '$1 $2 $3');
+  // Pattern 1: "quantity\nname\nprice" (with or without £) -> "quantity name £price"
+  text = text.replace(/^(\d+)\s*\n([^\n£\d]+?)\s*\n£?([\d.]+)/gm, '$1 $2 £$3');
 
-  // Pattern 2: "quantity name\n£price" -> "quantity name £price"
-  text = text.replace(/^(\d+)\s+([^\n£]+?)\s*\n(£[\d.]+)/gm, '$1 $2 $3');
+  // Pattern 2: "quantity name\nprice" (with or without £) -> "quantity name £price"
+  text = text.replace(/^(\d+)\s+([^\n£]+?)\s*\n£?([\d.]+)/gm, '$1 $2 £$3');
 
-  // Pattern 3: "name\n£price" (no quantity) -> "name £price"
-  text = text.replace(/^([^\n\d£][^\n£]+?)\s*\n(£[\d.]+)/gm, '$1 $2');
+  // Pattern 3: "name\nprice" (no quantity, with or without £) -> "name £price"
+  text = text.replace(/^([^\n\d£][^\n£]+?)\s*\n£?([\d.]+)/gm, '$1 £$2');
 
   return text;
 }
